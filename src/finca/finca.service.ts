@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Finca } from './schemas/finca.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { CrearFincaDto } from './dto/crearFinca.dto';
 
 @Injectable()
 export class FincaService {
@@ -15,5 +16,12 @@ export class FincaService {
         ]
       })
       .populate('colaboradores')
+  }
+
+  async crearFinca(usuarioId: string, finca:CrearFincaDto){
+    return await this.fincaModel.create({
+      _propietario: usuarioId,
+      ...finca
+    })
   }
 }
