@@ -10,9 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
-  imports: [FincaModule, ConfigModule.forRoot(), MongooseModule.forRoot(process.env.MONGO_URI), AuthModule, UsuarioModule],
-  controllers: [AppController, FincaController],
-  providers: [AppService, FincaService],
+  imports: [ConfigModule.forRoot(), MongooseModule.forRoot(process.env.MONGO_URI), AuthModule, UsuarioModule,FincaModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 
 export class AppModule { }

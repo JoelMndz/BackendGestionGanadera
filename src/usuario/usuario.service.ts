@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Usuario } from './schemas/usuario.schema';
 import { Model } from 'mongoose';
 import { CrearUsuarioDto } from './dto/crearUsuario.dto';
-import { ROLES } from './constantes';
+import { ROL } from './constantes';
 import {genSalt, hash} from "bcrypt";
 
 @Injectable()
@@ -18,6 +18,6 @@ export class UsuarioService {
     const existeUsuario = await this.buscarPorEmail(usuario.email);
     if(existeUsuario) throw new BadRequestException('El email ya esta registrado')
     usuario.password = await hash(usuario.password, 10);
-    return await this.usuarioModel.create({...usuario,rol: ROLES.ADMINISTRADOR})
+    return await this.usuarioModel.create({...usuario,rol: ROL.ADMINISTRADOR})
   }
 }

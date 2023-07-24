@@ -1,8 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
-import { ROLES } from "../constantes";
-
-export type UsuarioDocument = HydratedDocument<Usuario>;
+import { ROL } from "../constantes";
 
 @Schema()
 export class Usuario {
@@ -23,7 +20,7 @@ export class Usuario {
 
   @Prop({ 
     required: true,
-    enum:[ROLES.ADMINISTRADOR, ROLES.TRABAJADOR]
+    enum: ROL
   })
   rol: string;
 }

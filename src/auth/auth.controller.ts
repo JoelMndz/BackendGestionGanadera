@@ -3,10 +3,10 @@ import { AuthService } from './auth.service';
 import { CrearUsuarioDto } from 'src/usuario/dto/crearUsuario.dto';
 import { AuthGuard } from './auth.guard';
 import { IniciarSesionDto } from './dto/iniciarSesion.dto';
-import { ApiBearerAuth, ApiHeader, ApiHeaders, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
-import { Usuario } from 'src/usuario/schemas/usuario.schema';
+import { ApiBearerAuth, ApiOkResponse, ApiTags} from '@nestjs/swagger';
 import { IniciarSesionResponse, UsuarioResponse } from './dto/inisiarSesionResponse.dto';
-
+import {Request} from "express";
+import { GuardPayload } from 'src/finca/constantes';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,7 +20,7 @@ export class AuthController {
     return this.authService.iniciarSesion(usuario.email, usuario.password);
   }
 
-  @ApiOkResponse({ description: 'Registro exitoso', type: UsuarioResponse })
+  @ApiOkResponse({ description: 'Registro exitoso', type: IniciarSesionResponse })
   @Post('registro')
   registro(@Body() usuario:CrearUsuarioDto){
     return this.authService.registroAdministrador(usuario);
@@ -29,7 +29,7 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get('perfil')
-  getProfile(@Req() req:any) {
+  getProfile(@Req() req: Request & GuardPayload) {
     return req.usuario;
   }
 }

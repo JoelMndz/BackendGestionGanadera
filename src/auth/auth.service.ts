@@ -15,13 +15,15 @@ export class AuthService {
     if (!usuario || !(await compare(password,usuario.password))) {
       throw new UnauthorizedException();
     }
-    
-    const token = await this.jwtService.signAsync({id: usuario._id, rol: usuario.rol});
+    const {_id, rol} = usuario;
+    const token = await this.jwtService.signAsync({_id, rol});
     return {usuario,token};
   }
 
   async registroAdministrador(usuario: CrearUsuarioDto){
     const usuarioCreado = await this.usuarioService.crearAdministrador(usuario);
-    return usuarioCreado
+    const {_id, rol} = usuarioCreado;
+    const token = await this.jwtService.signAsync({_id, rol});
+    return {usuario,token};
   }
 }
