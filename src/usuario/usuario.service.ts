@@ -4,7 +4,7 @@ import { Usuario } from './schemas/usuario.schema';
 import { Model } from 'mongoose';
 import { CrearUsuarioDto } from './dto/crearUsuario.dto';
 import { ROL } from './constantes';
-import { genSalt, hash } from 'bcrypt';
+import { hash } from 'bcrypt';
 import { CrearTrabajadorDto } from './dto/crearTrabajador.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -32,26 +32,31 @@ export class UsuarioService {
       throw new BadRequestException('El email ya esta registrado');
 
     const contraseña = this.generarContrasenaAleatoria();
-    await this.enviarContraseñaPorCorreo(trabajador.email, contraseña);
+    await this.sendEmail(trabajador.email, contraseña);
 
     return await this.usuarioModel.create({
       ...trabajador,
       rol: ROL.TRABAJADOR,
+      password: await hash(contraseña, 10)
     });
   }
 
-  async enviarContraseñaPorCorreo(
-    email: string,
-    password: string,
-  ): Promise<void> {
-    try {
-      const mailOptions = {
-        to: email,
-        subject: 'Contraseña para iniciar seccion',
-        text: `Tu contraseña es: ${password}`,
-      };
+  async todosTrabajadores(){
+    return await this.usuarioModel.find({rol: ROL.TRABAJADOR})
+  }
 
-      await this.mailerService.sendMail(mailOptions);
+  async sendEmail(email: string, contrasena: string): Promise<void> {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Envío de contraseña',
+        html: `
+          <h1>Contraseña para iniciar sesión</h1>
+          <p>Tu contraseña es: <strong>${contrasena}</strong></p>
+          <p>Por favor, asegúrate de mantener esta contraseña segura y no compartirla con nadie.</p>
+          <p>¡Gracias!</p>
+        `,
+      });
 
       console.log('Correo electrónico enviado correctamente.');
     } catch (error) {
@@ -60,17 +65,17 @@ export class UsuarioService {
   }
 
   generarContrasenaAleatoria(): string {
-    const length = 5;
-    let password = '';
-    const characters = '0123456789';
-    const charactersLength = characters.length;
+    const longitud = 5;
+    let contrasena = '';
+    const caracteres = '0123456789';
+    const longitudCaracteres = caracteres.length;
 
-    for (let i = 0; i < length; i++) {
-      password += characters.charAt(
-        Math.floor(Math.random() * charactersLength),
+    for (let i = 0; i < longitud; i++) {
+      contrasena += caracteres.charAt(
+        Math.floor(Math.random() * longitudCaracteres),
       );
     }
 
-    return password;
+    return contrasena;
   }
 }

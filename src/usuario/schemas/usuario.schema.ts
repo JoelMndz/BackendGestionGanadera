@@ -19,7 +19,7 @@ export class Usuario {
   direccion: string;
 
   @Prop()
-  telefono: number;
+  telefono: Number;
 
   @Prop({ 
     required: true,

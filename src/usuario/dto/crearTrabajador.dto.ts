@@ -18,6 +18,5 @@ export class CrearTrabajadorDto {
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
-  telefono: number;
+  telefono: Number;
 }

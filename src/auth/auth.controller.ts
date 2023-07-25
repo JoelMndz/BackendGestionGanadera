@@ -29,7 +29,7 @@ export class AuthController {
 
   //@ApiOkResponse({ description: 'Registro exitoso', type: IniciarSesionResponse })
   @Post('registro-trabajador')
-  registroTrabajador(@Body() trabajador:CrearTrabajadorDto){
+  registroTrabajador(@Body() trabajador: CrearTrabajadorDto){
     return this.authService.registroTrabajador(trabajador);
   }
 
