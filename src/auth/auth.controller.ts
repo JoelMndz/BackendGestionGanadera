@@ -7,6 +7,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags} from '@nestjs/swagger';
 import { IniciarSesionResponse, UsuarioResponse } from './dto/inisiarSesionResponse.dto';
 import {Request} from "express";
 import { GuardPayload } from 'src/finca/constantes';
+import { CrearTrabajadorDto } from 'src/usuario/dto/crearTrabajador.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -24,6 +25,12 @@ export class AuthController {
   @Post('registro')
   registro(@Body() usuario:CrearUsuarioDto){
     return this.authService.registroAdministrador(usuario);
+  }
+
+  //@ApiOkResponse({ description: 'Registro exitoso', type: IniciarSesionResponse })
+  @Post('registro-trabajador')
+  registroTrabajador(@Body() trabajador:CrearTrabajadorDto){
+    return this.authService.registroTrabajador(trabajador);
   }
 
   @ApiBearerAuth()
