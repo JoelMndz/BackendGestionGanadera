@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
-import { CrearTrabajadorDto } from 'src/usuario/dto/crearTrabajador.dto';
 import { CrearUsuarioDto } from 'src/usuario/dto/crearUsuario.dto';
 import { UsuarioService } from 'src/usuario/usuario.service';
 
@@ -27,12 +26,5 @@ export class AuthService {
     const { _id, rol } = usuarioCreado;
     const token = await this.jwtService.signAsync({ _id, rol });
     return { usuario, token };
-  }
-
-  async registroTrabajador(trabajador: CrearTrabajadorDto) {
-    const trabajadorCreado = await this.usuarioService.crearTrabajador(trabajador);
-    const { _id, rol } = trabajadorCreado;
-    const token = await this.jwtService.signAsync({ _id, rol });
-    return { trabajador, token };
   }
 }

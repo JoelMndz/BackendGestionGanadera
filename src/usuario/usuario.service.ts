@@ -21,9 +21,13 @@ export class UsuarioService {
 
   async crearAdministrador(usuario: CrearUsuarioDto) {
     const existeUsuario = await this.buscarPorEmail(usuario.email);
-    if (existeUsuario) throw new BadRequestException('El email ya esta registrado');
+    if (existeUsuario)
+      throw new BadRequestException('El email ya esta registrado');
     usuario.password = await hash(usuario.password, 10);
-    return await this.usuarioModel.create({ ...usuario, rol: ROL.ADMINISTRADOR, });
+    return await this.usuarioModel.create({
+      ...usuario,
+      rol: ROL.ADMINISTRADOR,
+    });
   }
 
   async crearTrabajador(trabajador: CrearTrabajadorDto) {
@@ -35,14 +39,17 @@ export class UsuarioService {
     await this.sendEmail(trabajador.email, contraseña);
 
     return await this.usuarioModel.create({
-      ...trabajador,
+      nombres: trabajador.nombres,
+      apellidos: trabajador.apellidos,
+      email: trabajador.email,
+      telefono: trabajador.telefono,
       rol: ROL.TRABAJADOR,
-      password: await hash(contraseña, 10)
+      password: await hash(contraseña, 10),
     });
   }
 
-  async todosTrabajadores(){
-    return await this.usuarioModel.find({rol: ROL.TRABAJADOR})
+  async todosTrabajadores() {
+    return await this.usuarioModel.find({ rol: ROL.TRABAJADOR });
   }
 
   async sendEmail(email: string, contrasena: string): Promise<void> {
