@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Finca } from './schemas/finca.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,6 +19,9 @@ export class FincaService {
   }
 
   async crearFinca(usuarioId: string, finca:CrearFincaDto){
+    if(finca.area < finca.areaGanadera)
+      new BadRequestException('El area ganadera no puede ser mayor que el area')
+      
     return await this.fincaModel.create({
       _propietario: usuarioId,
       ...finca
