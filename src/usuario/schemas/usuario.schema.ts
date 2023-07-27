@@ -18,6 +18,9 @@ export class Usuario {
   @Prop()
   direccion: string;
 
+  @Prop()
+  telefono: Number;
+
   @Prop({ 
     required: true,
     enum: ROL
