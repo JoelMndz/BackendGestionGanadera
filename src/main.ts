@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   
@@ -12,6 +13,7 @@ async function bootstrap() {
       transform: true,
     })
   )
+  app.use(bodyParser.json({limit:'10mb'}))
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('API Gestion Ganadera')
