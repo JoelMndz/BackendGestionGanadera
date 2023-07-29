@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 import { TIPO_MEDIDAS, TIPO_PROPOSITO } from "../constantes";
 import { Usuario } from "src/usuario/schemas/usuario.schema";
+import { ROL } from "src/usuario/constantes";
 
 @Schema()
 export class Finca{
@@ -43,9 +44,18 @@ export class Finca{
   
   @Prop({
     default: [],
-    type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Usuario'}]
+    type: [{
+      _usuario: {type: mongoose.Schema.Types.ObjectId, ref: 'Usuario'},
+      rol: {
+        type: String,
+        enum: ROL
+      }
+    }]
   })
-  colaboradores: Usuario[]
+  colaboradores: {
+    _usuario: string,
+    rol: string
+  }[]
 
 }
 
