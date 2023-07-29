@@ -16,7 +16,7 @@ export class FincaService {
     return await this.fincaModel.find({ 
         $or: [
           { _propietario: usuarioId }, 
-          { colaboradores: { $in: usuarioId } }
+          { "colaboradores._usuario": { $in: usuarioId } }
         ]
       })
       .populate('colaboradores')
