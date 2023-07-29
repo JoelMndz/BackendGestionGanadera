@@ -26,7 +26,6 @@ export class UsuarioService {
     usuario.password = await hash(usuario.password, 10);
     return await this.usuarioModel.create({
       ...usuario,
-      rol: ROL.ADMINISTRADOR,
     });
   }
 

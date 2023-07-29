@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { ROL } from "../constantes";
 
 @Schema()
 export class Usuario {
@@ -21,11 +20,6 @@ export class Usuario {
   @Prop()
   telefono: Number;
 
-  @Prop({ 
-    required: true,
-    enum: ROL
-  })
-  rol: string;
 }
 
 export const UsuarioSchema = SchemaFactory.createForClass(Usuario)

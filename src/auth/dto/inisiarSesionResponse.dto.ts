@@ -11,8 +11,6 @@ export class UsuarioResponse{
   email: string;
   @ApiProperty()
   direccion: string;
-  @ApiProperty()
-  rol:string;
 }
 
 export class IniciarSesionResponse{
