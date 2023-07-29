@@ -8,16 +8,20 @@ import { AuthModule } from './auth/auth.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { EventoModule } from './evento/evento.module';
 import { VentaLecheModule } from './ventaLeche/venta.leche.module';
+import { AlmacenamientoModule } from './almacenamiento/almacenamiento.module';
+import { GanadoModule } from './ganado/ganado.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({isGlobal: true}),
     MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
     UsuarioModule,
     FincaModule,
     EventoModule,
-    VentaLecheModule
+    VentaLecheModule,
+    AlmacenamientoModule,
+    GanadoModule
   ],
   controllers: [AppController],
   providers: [AppService],
