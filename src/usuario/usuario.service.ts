@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Body } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Usuario } from './schemas/usuario.schema';
 import { Model } from 'mongoose';
@@ -7,6 +7,7 @@ import { ROL } from './constantes';
 import { hash } from 'bcrypt';
 import { CrearTrabajadorDto } from './dto/crearTrabajador.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import { NuevoEmpleadoDto } from './dto/nuevoEmpleado.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -17,6 +18,14 @@ export class UsuarioService {
 
   async buscarPorEmail(email: string) {
     return await this.usuarioModel.findOne({ email: email });
+  }
+
+  async registrarEmpleado(@Body() empleado: NuevoEmpleadoDto) {
+    const registrado = await this.buscarPorEmail(empleado.email);
+
+    if(registrado){
+      throw new BadRequestException('El email del empleado ya se encuentra registrado');
+    }
   }
 
   async crearAdministrador(usuario: CrearUsuarioDto) {
@@ -32,7 +41,18 @@ export class UsuarioService {
 
   async crearTrabajador(trabajador: CrearTrabajadorDto) {
     const usuarioRegistrado = await this.buscarPorEmail(trabajador.email);
-    if (usuarioRegistrado)
+    if (!usuarioRegistrado){
+      // generar contraseña
+      // enviar correo con contraseña al usuario
+        //si fue enviado, proceder
+        // si no fue enviado, mostrar error y finalizar
+    }
+    // verificar si el usuario ya es colaborador de la finca
+      // si lo es, bad request "El usuario ya se encuentra registrado como colaborador de la finca"
+
+    // agregar usuario como colaborador, indicando el rol
+      // si se agrego, notificar por correo que ha sido agregado como colaborador a la finca especifica 
+      // en caso de error, bad request
       throw new BadRequestException('El email ya esta registrado');
 
     const contraseña = this.generarContrasenaAleatoria();
