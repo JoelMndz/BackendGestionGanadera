@@ -50,6 +50,7 @@ export class CrearGanadoDto{
 
   @ApiProperty({example:'ijiIHNUiynuiGUYGUbuy'})
   @IsBase64()
+  @IsOptional()
   imagenBase64: string
 
   @ApiProperty()
