@@ -47,6 +47,7 @@ export class Finca{
     type: [{
       _usuario: {type: mongoose.Schema.Types.ObjectId, ref: 'Usuario'},
       rol: {
+        type: String,
         enum: ROL
       }
     }]

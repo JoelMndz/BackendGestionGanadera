@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CrearFincaDto } from './dto/crearFinca.dto';
 import { Usuario } from '../usuario/schemas/usuario.schema';
+import { ROL } from 'src/usuario/constantes';
 
 
 @Injectable()
@@ -51,7 +52,7 @@ export class FincaService {
         throw new BadRequestException('El trabajador no existe');
       }
 
-      finca.colaboradores.push(trabajador);
+      finca.colaboradores.push({_usuario: trabajador._id.toString(), rol: ROL.TRABAJADOR});
 
       await finca.save();
 
