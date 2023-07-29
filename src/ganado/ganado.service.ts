@@ -20,7 +20,7 @@ export class GanadoService {
   async crearGanado(ganado: CrearGanadoDto) {
 
     let fotoURL = null
-    if(ganado.imagenBase64) await this.almacenamientoService.subirImagenEnBase64(ganado.imagenBase64);
+    if(ganado.imagenBase64) fotoURL = await this.almacenamientoService.subirImagenEnBase64(ganado.imagenBase64);
     const pesos = ganado.peso ? [{
       fecha: Date.now(), 
       peso: ganado.peso,
