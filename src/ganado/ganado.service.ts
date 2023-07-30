@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CloudinaryStrategy } from 'src/almacenamiento/strategy/cloudinary.strategy';
 import { CrearGanadoDto } from './dto/crearGanado.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Ganado } from './schema/ganado.schema';
 import { Model } from 'mongoose';
+import { AgregarPesoDto } from './dto/agregarPeso.dto';
 
 @Injectable()
 export class GanadoService {
@@ -45,5 +46,18 @@ export class GanadoService {
     });
 
     return nuevoGanado
+  }
+
+  async agregarPeso(pesoDto:AgregarPesoDto){
+    const ganado = await this.ganadoModel.findById(pesoDto._ganado);
+    if(!ganado) throw new BadRequestException('El id del ganado no existe!');
+    const nuevoPeso = {
+      fecha: pesoDto.fecha,
+      alimentacion: pesoDto.alimentacion,
+      notas: pesoDto.notas ?? '',
+      peso: pesoDto.peso
+    };
+    ganado.pesos.push(nuevoPeso);
+    return await ganado.save();
   }
 }
