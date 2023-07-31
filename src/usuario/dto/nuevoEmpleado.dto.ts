@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsEmail, IsNumber, isNotEmpty, } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, IsNumber } from 'class-validator';
+import { ROL } from '../constantes';
 
 export class NuevoEmpleadoDto {
   @ApiProperty()
@@ -18,10 +19,7 @@ export class NuevoEmpleadoDto {
   email: string;
 
   @ApiProperty()
-  @IsNumber()
-  telefono: Number;
-
-  @ApiProperty()
   @IsString()
-  dirección: string;
+  @IsNotEmpty()
+  rol: ROL
 }

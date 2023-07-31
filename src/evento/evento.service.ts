@@ -15,7 +15,7 @@ async function validarFincaUsuario(fincaModelo: Model<Finca>, id_finca:string, u
       {
         $or: [
           { _propietario: usuarioId },
-          { colaboradores: { $in: usuarioId } },
+          { "colaboradores._usuario._id": usuarioId },
         ]
       }
     ]
@@ -37,7 +37,7 @@ export class EventoService{
     
     if(!autorizado){
       throw new UnauthorizedException("Finca no encontrada en los registros del usuario");
-    }
+    }    
     return await this.eventoModel.find({ _finca: fincaId }).populate('_finca');
   }
 
