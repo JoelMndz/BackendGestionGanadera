@@ -13,18 +13,21 @@ export class AuthService {
 
   async iniciarSesion(email: string, password: string) {
     const usuario = await this.usuarioService.buscarPorEmail(email);
+
     if (!usuario || !(await compare(password, usuario.password))) {
       throw new UnauthorizedException();
     }
-    const { _id } = usuario;
-    const token = await this.jwtService.signAsync({ _id });
+    const token = await this.jwtService.signAsync({ _id: usuario._id });
     return { usuario, token };
   }
+  
+  async registroUsuario(nuevoUsuario: CrearUsuarioDto){
+    const us_registrado:any = await this.usuarioService.registroUsuario(nuevoUsuario);
 
-  async registroAdministrador(usuario: CrearUsuarioDto) {
-    const usuarioCreado = await this.usuarioService.crearAdministrador(usuario);
-    const { _id } = usuarioCreado;
-    const token = await this.jwtService.signAsync({ _id });
-    return { usuario, token };
+    const token = await this.jwtService.signAsync({_id: us_registrado._id })
+    return {
+      usuario: nuevoUsuario,
+      token
+    }
   }
 }

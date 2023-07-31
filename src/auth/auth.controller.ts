@@ -3,32 +3,28 @@ import { AuthService } from './auth.service';
 import { CrearUsuarioDto } from 'src/usuario/dto/crearUsuario.dto';
 import { AuthGuard } from './auth.guard';
 import { IniciarSesionDto } from './dto/iniciarSesion.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiTags} from '@nestjs/swagger';
-import { IniciarSesionResponse, UsuarioResponse } from './dto/inisiarSesionResponse.dto';
+import { ApiBearerAuth, ApiConflictResponse, ApiOkResponse, ApiResponse, ApiTags} from '@nestjs/swagger';
+import { IniciarSesionResponse } from './dto/inisiarSesionResponse.dto';
 import {Request} from "express";
 import { GuardPayload } from 'src/finca/constantes';
 
 @ApiTags('auth')
 @Controller('auth')
-export class AuthController {
+export class AuthController { 
   constructor(private authService: AuthService) {}
 
-  @ApiOkResponse({
-    description: 'Inicio de sesión exitoso',
-    type: IniciarSesionResponse,
-  })
+  @ApiOkResponse({ description: 'Inicio de sesión exitoso', type: IniciarSesionResponse, status:200})
+  @ApiConflictResponse({ description: 'Usuario o contraseña incorrecta, no autorizado para ingresar', status:401 })
   @Post('iniciar-sesion')
   iniciarSesion(@Body() usuario: IniciarSesionDto) {
     return this.authService.iniciarSesion(usuario.email, usuario.password);
   }
 
-  @ApiOkResponse({
-    description: 'Registro exitoso',
-    type: IniciarSesionResponse,
-  })
+  @ApiOkResponse({ description: 'Registro exitoso del nuevo usuario', type: IniciarSesionResponse, status: 201})
+  @ApiResponse({ description: 'Usuario ya registrado, su email ya consta como regustrado', status: 409})
   @Post('registro')
   registro(@Body() usuario: CrearUsuarioDto) {
-    return this.authService.registroAdministrador(usuario);
+    return this.authService.registroUsuario(usuario);
   }
 
   @ApiBearerAuth()

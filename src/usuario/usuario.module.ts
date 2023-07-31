@@ -6,6 +6,8 @@ import { Usuario, UsuarioSchema } from './schemas/usuario.schema';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
+import { Finca, FincaSchema } from 'src/finca/schemas/finca.schema';
+import { FincaService } from 'src/finca/finca.service';
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import * as path from 'path';
       envFilePath: path.resolve(__dirname, '..', '..', '.env')
     }),
     MongooseModule.forFeature([{name: Usuario.name, schema: UsuarioSchema}]),
+    MongooseModule.forFeature([{name: Finca.name, schema: FincaSchema}]),
     MailerModule.forRoot({
     transport: {
       host: 'smtp.gmail.com',
