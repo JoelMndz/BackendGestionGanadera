@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsBase64, IsBoolean, IsDate, IsDateString, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { Transform,Type } from "class-transformer"
 import { ESTADO_GANADO, SEXO } from "../constantes";
 
 export class CrearGanadoDto{
@@ -45,6 +46,8 @@ export class CrearGanadoDto{
   _madre: string
 
   @ApiProperty()
+  @Transform(({ value }) => Number(value))
+  @Type(() => Number)
   @IsNumber()
   peso: number;
 

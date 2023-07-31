@@ -191,10 +191,7 @@ export class UsuarioService {
               `)
               .catch(error => {
                 console.error('El empleado ha sido registrado, pero no se ha podido enviar el correo de invitación');
-              });
-              
-              console.log(res);
-              
+              });              
               return usuario;
             };
 

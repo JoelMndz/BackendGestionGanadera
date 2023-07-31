@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform,Type } from "class-transformer"
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { TIPO_MEDIDAS, TIPO_PROPOSITO } from "../constantes";
 
@@ -10,10 +11,14 @@ export class CrearFincaDto{
   nombre: string;
 
   @ApiProperty()
+  @Transform(({ value }) => Number(value))
+  @Type(() => Number)
   @IsNumber()
   area: Number;
 
   @ApiProperty()
+  @Transform(({ value }) => Number(value))
+  @Type(() => Number)
   @IsNumber()
   areaGanadera: Number;
 

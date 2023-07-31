@@ -53,7 +53,7 @@ export class Ganado{
     peso: number
     alimentacion: String,
     notas: String,
-  }
+  }[]
 
   @Prop({
     type: String,

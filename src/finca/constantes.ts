@@ -1,4 +1,3 @@
-import { ROL } from "src/usuario/constantes"
 
 export enum TIPO_MEDIDAS {
   MANZANA= 'manzana',
@@ -16,6 +15,5 @@ export enum TIPO_PROPOSITO {
 export type GuardPayload={
   usuario:{
     _id: string,
-    rol: ROL
   }
 }
