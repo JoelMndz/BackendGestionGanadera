@@ -13,7 +13,7 @@ export class CloudinaryStrategy implements IAlmacenamientoStrategy{
 
   async subirImagenEnBase64(base64: string): Promise<string> {
     const respuesta = await cloudinary.uploader.upload(`data:image/png;base64,${base64}`)
-    return respuesta.url;
+    return respuesta.secure_url;
   }
 
 }
