@@ -16,6 +16,8 @@ export class GanadoService {
 
   async obtenerGanadoPorFinca(idFinca: string){
     return await this.ganadoModel.find({_finca:idFinca})
+      .populate('_padre')
+      .populate('_madre')
   }
 
   async crearGanado(ganado: CrearGanadoDto) {
