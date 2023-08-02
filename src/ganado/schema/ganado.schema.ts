@@ -30,13 +30,15 @@ export class Ganado{
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Ganado'
+    ref: 'Ganado',
+    default: null
   })
   _padre: string
   
   @Prop({
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Ganado'
+    ref: 'Ganado',
+    default: null
   })
   _madre: string
 
