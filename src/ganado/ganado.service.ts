@@ -6,6 +6,7 @@ import { Ganado } from './schema/ganado.schema';
 import { Model } from 'mongoose';
 import { AgregarPesoDto } from './dto/agregarPeso.dto';
 import { ActualizarGanadoDto } from './dto/actualizarGanado.dto';
+import { ESTADO_GANADO } from './constantes';
 
 @Injectable()
 export class GanadoService {
@@ -16,7 +17,9 @@ export class GanadoService {
   ) { }
 
   async obtenerGanadoPorFinca(idFinca: string) {
-    return await this.ganadoModel.find({ _finca: idFinca })
+    return await this.ganadoModel.find({ _finca: idFinca, estado:{
+      $ne: ESTADO_GANADO.ELIMINADO
+    }})
       .populate('_padre')
       .populate('_madre')
   }
@@ -78,5 +81,11 @@ export class GanadoService {
     return await this.ganadoModel.findById(ganadoDto._id)
       .populate('_padre')
       .populate('_madre')
+  }
+
+  async eliminarGanado(idGanado: string){    
+    const ganadoEliminado = await this.ganadoModel.findByIdAndUpdate(idGanado,{estado: ESTADO_GANADO.ELIMINADO})    
+    if(!ganadoEliminado) throw new BadRequestException('El animal no existe!')
+    return ganadoEliminado;
   }
 }

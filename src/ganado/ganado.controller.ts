@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, Put } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Put } from '@nestjs/common';
 import { GanadoService } from './ganado.service';
 import { Post, Body, UseGuards } from "@nestjs/common";
 import { CrearGanadoDto } from './dto/crearGanado.dto';
@@ -31,8 +31,13 @@ export class GanadoController {
     return this.ganadoService.agregarPeso(pesoDto);
   }
 
-  @Patch('actualizar')
+  @Patch('actualizar-ganado')
   actualizarGanado(@Body() ganadoDto: ActualizarGanadoDto){
     return this.ganadoService.actualizarGanado(ganadoDto);
+  }
+
+  @Delete('eliminar-ganado/:idGanado')
+  eliminaGanado(@Param('idGanado') idGanado: string){
+    return this.ganadoService.eliminarGanado(idGanado)
   }
 }
