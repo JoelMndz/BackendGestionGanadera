@@ -22,7 +22,7 @@ export class GanadoController {
     return this.ganadoService.obtenerGanadoPorFinca(idFinca)
   }
 
-  @Get('obtener-estisticas-por-finca/:idFinca')
+  @Get('obtener-estadisticas-por-finca/:idFinca')
   obtenerEstadisticasPorFinca(@Param('idFinca') idFinca:string){
     return this.ganadoService.obtenerEstadisticasPorFinca(idFinca)
   }

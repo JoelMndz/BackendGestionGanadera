@@ -99,11 +99,10 @@ export class GanadoService {
       $and:[
         {_finca: idFinca},
         {estado:{$ne: ESTADO_GANADO.ELIMINADO}},
-        {estado:{$ne: ESTADO_GANADO.VENDIDO}},
       ]});
     const resultado = {
-      machos: data.filter(x => x.sexo === SEXO.MACHO).length,
-      hembras: data.filter(x => x.sexo === SEXO.HEMBRA).length,
+      machos: data.filter(x => x.sexo === SEXO.MACHO && x.estado !== ESTADO_GANADO.VENDIDO).length,
+      hembras: data.filter(x => x.sexo === SEXO.HEMBRA && x.estado !== ESTADO_GANADO.VENDIDO).length,
       vendidos: data.filter(x => x.estado === ESTADO_GANADO.VENDIDO).length
     }
     return resultado;
