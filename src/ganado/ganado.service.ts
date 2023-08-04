@@ -96,7 +96,7 @@ export class GanadoService {
     
     this.eventEmitter.emit('alertar', new CrearAlertaEvento(
       'Animal Modificado',
-      `Se ha modificado animal: ${ganadoActualizado.nombre} - ${ganadoActualizado.numero}`,
+      `Se ha modificado un animal: ${ganadoActualizado.nombre} - ${ganadoActualizado.numero}`,
       ganadoActualizado._finca))
 
     return ganadoActualizado
