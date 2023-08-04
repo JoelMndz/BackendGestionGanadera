@@ -95,7 +95,12 @@ export class GanadoService {
   }
 
   async obtenerEstadisticasPorFinca(idFinca: string){
-    const data = await this.ganadoModel.find({_finca: idFinca});
+    const data = await this.ganadoModel.find({
+      $and:[
+        {_finca: idFinca},
+        {estado:{$ne: ESTADO_GANADO.ELIMINADO}},
+        {estado:{$ne: ESTADO_GANADO.VENDIDO}},
+      ]});
     const resultado = {
       machos: data.filter(x => x.sexo === SEXO.MACHO).length,
       hembras: data.filter(x => x.sexo === SEXO.HEMBRA).length,
