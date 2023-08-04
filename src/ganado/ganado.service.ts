@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CloudinaryStrategy } from 'src/almacenamiento/strategy/cloudinary.strategy';
 import { CrearGanadoDto } from './dto/crearGanado.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,6 +7,8 @@ import { Model } from 'mongoose';
 import { AgregarPesoDto } from './dto/agregarPeso.dto';
 import { ActualizarGanadoDto } from './dto/actualizarGanado.dto';
 import { ESTADO_GANADO } from './constantes';
+import { ProduccionLeche } from './schema/produccion.leche.schema';
+import { Finca } from 'src/finca/schemas/finca.schema';
 
 @Injectable()
 export class GanadoService {
@@ -87,5 +89,50 @@ export class GanadoService {
     const ganadoEliminado = await this.ganadoModel.findByIdAndUpdate(idGanado,{estado: ESTADO_GANADO.ELIMINADO})    
     if(!ganadoEliminado) throw new BadRequestException('El animal no existe!')
     return ganadoEliminado;
+  }
+}
+
+
+@Injectable()
+export class ProduccionLecheService {
+  constructor(
+    @InjectModel(ProduccionLeche.name) private prodLecheModelo: Model<ProduccionLeche>,
+    @InjectModel(Finca.name) private fincaModelo: Model<Finca>,
+  ){};
+
+  async nuevaProduccionLeche(fincaId:string, usuarioId: string, vacaId:string, litros:number, horario:string, fecha:Date) {
+    const usuPermitido = this.fincaModelo.findOne({
+      $and: [
+        {_id: fincaId},
+        {
+          $or: [
+            {'colaboradores._usuario._id': usuarioId},
+            {_propietario: usuarioId}
+          ]
+        }
+      ]
+    });
+        
+    if(usuPermitido){
+      return await this.prodLecheModelo.create({
+        _finca : fincaId,
+        _vaca: vacaId,
+        horario,
+        fecha,
+        litros
+      });
+    }
+    throw new UnauthorizedException("Finca no encontrada para el usuario autenticado")
+  };
+
+  async obtenerRegistrosLeches(fincaId:string, vacaId:string){    
+    const resp = await this.prodLecheModelo.find({
+      $and: [
+        {'_finca': fincaId},
+        {'_vaca': vacaId}
+      ]
+    });
+    
+    return resp.map((fila:any) => ({_id: fila._id, litros: fila.litros, fecha: fila.fecha, jornada: fila.horario}))
   }
 }

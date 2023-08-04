@@ -1,11 +1,12 @@
-import { Controller, Delete, Get, Param, Patch, Put } from '@nestjs/common';
-import { GanadoService } from './ganado.service';
-import { Post, Body, UseGuards } from "@nestjs/common";
+import { Controller, Delete, Get, Param, Patch, Put, UseGuards, Post, Body, Req } from '@nestjs/common';
+import { GanadoService, ProduccionLecheService } from './ganado.service';
 import { CrearGanadoDto } from './dto/crearGanado.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AgregarPesoDto } from './dto/agregarPeso.dto';
 import { ActualizarGanadoDto } from './dto/actualizarGanado.dto';
+import { ProduccionLecheDto } from './dto/nuevaProduccionLeche.dto';
+import { GuardPayload } from 'src/finca/constantes';
 
 @ApiTags('ganado')
 @ApiBearerAuth()
@@ -40,4 +41,35 @@ export class GanadoController {
   eliminaGanado(@Param('idGanado') idGanado: string){
     return this.ganadoService.eliminarGanado(idGanado)
   }
+}
+
+
+@ApiTags('Módulo de Producción')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
+@Controller('produccion/leche')
+export class ProduccionLecheController {
+
+  constructor(
+    private prodLecheService: ProduccionLecheService
+  ){};
+
+
+  @Get('/:finca/:vaca')
+  obtenerRegistros(@Param('vaca') vaca:string, @Param('finca') finca:string){
+    return this.prodLecheService.obtenerRegistrosLeches(finca, vaca)
+  }
+
+  @Post()
+  nuevaProduccion(@Body() data: ProduccionLecheDto, @Req() req: GuardPayload) {
+    return this.prodLecheService.nuevaProduccionLeche(
+      data._finca, 
+      req.usuario._id,
+      data._vaca,
+      data.litros,
+      data.horario,
+      data.fecha
+    )
+  }
+
 }

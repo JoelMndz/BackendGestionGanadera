@@ -10,6 +10,7 @@ import { EventoModule } from './evento/evento.module';
 import { VentaLecheModule } from './ventaLeche/venta.leche.module';
 import { AlmacenamientoModule } from './almacenamiento/almacenamiento.module';
 import { GanadoModule } from './ganado/ganado.module';
+import { ProduccionLecheModule } from './ganado/produccion.leche.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { GanadoModule } from './ganado/ganado.module';
     EventoModule,
     VentaLecheModule,
     AlmacenamientoModule,
-    GanadoModule
+    GanadoModule,
+    ProduccionLecheModule,
   ],
   controllers: [AppController],
   providers: [AppService],
