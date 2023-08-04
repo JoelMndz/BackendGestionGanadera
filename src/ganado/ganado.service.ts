@@ -6,7 +6,7 @@ import { Ganado } from './schema/ganado.schema';
 import { Model } from 'mongoose';
 import { AgregarPesoDto } from './dto/agregarPeso.dto';
 import { ActualizarGanadoDto } from './dto/actualizarGanado.dto';
-import { ESTADO_GANADO } from './constantes';
+import { ESTADO_GANADO, SEXO } from './constantes';
 import { ProduccionLeche } from './schema/produccion.leche.schema';
 import { Finca } from 'src/finca/schemas/finca.schema';
 
@@ -92,6 +92,16 @@ export class GanadoService {
     const ganadoEliminado = await this.ganadoModel.findByIdAndUpdate(idGanado,{estado: ESTADO_GANADO.ELIMINADO})    
     if(!ganadoEliminado) throw new BadRequestException('El animal no existe!')
     return ganadoEliminado;
+  }
+
+  async obtenerEstadisticasPorFinca(idFinca: string){
+    const data = await this.ganadoModel.find({_finca: idFinca});
+    const resultado = {
+      machos: data.filter(x => x.sexo === SEXO.MACHO).length,
+      hembras: data.filter(x => x.sexo === SEXO.HEMBRA).length,
+      vendidos: data.filter(x => x.estado === ESTADO_GANADO.VENDIDO).length
+    }
+    return resultado;
   }
 }
 
