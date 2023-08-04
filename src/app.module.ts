@@ -11,9 +11,12 @@ import { VentaLecheModule } from './ventaLeche/venta.leche.module';
 import { AlmacenamientoModule } from './almacenamiento/almacenamiento.module';
 import { GanadoModule } from './ganado/ganado.module';
 import { ProduccionLecheModule } from './ganado/produccion.leche.module';
+import { AlertaModule } from './alerta/alerta.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({isGlobal: true}),
     MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
@@ -24,6 +27,7 @@ import { ProduccionLecheModule } from './ganado/produccion.leche.module';
     AlmacenamientoModule,
     GanadoModule,
     ProduccionLecheModule,
+    AlertaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
