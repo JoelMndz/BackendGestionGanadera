@@ -11,3 +11,9 @@ export enum ESTADO_GANADO {
   VENDIDO= 'vendido',
   ELIMINADO = 'eliminado'
 }
+
+export enum HORARIO_ORDENO {
+  MAÑANA='mañana',
+  TARDE='tarde',
+  NOCHE='noche'
+}
