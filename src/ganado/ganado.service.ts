@@ -19,9 +19,12 @@ export class GanadoService {
   ) { }
 
   async obtenerGanadoPorFinca(idFinca: string) {
-    return await this.ganadoModel.find({ _finca: idFinca, estado:{
-      $ne: ESTADO_GANADO.ELIMINADO
-    }})
+    return await this.ganadoModel.find({
+      $and:[
+        {_finca: idFinca},
+        {estado:{$ne: ESTADO_GANADO.ELIMINADO}},
+        {estado:{$ne: ESTADO_GANADO.VENDIDO}},
+      ]})
       .populate('_padre')
       .populate('_madre')
   }
