@@ -11,6 +11,7 @@ import { VentaLecheModule } from './ventaLeche/venta.leche.module';
 import { AlmacenamientoModule } from './almacenamiento/almacenamiento.module';
 import { GanadoModule } from './ganado/ganado.module';
 import { ProduccionLecheModule } from './ganado/produccion.leche.module';
+import { ReproduccionModulo } from './ganado/reproduccion.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProduccionLecheModule } from './ganado/produccion.leche.module';
     AlmacenamientoModule,
     GanadoModule,
     ProduccionLecheModule,
+    ReproduccionModulo,
   ],
   controllers: [AppController],
   providers: [AppService],
