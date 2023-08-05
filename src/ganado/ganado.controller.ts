@@ -22,6 +22,11 @@ export class GanadoController {
     return this.ganadoService.obtenerGanadoPorFinca(idFinca)
   }
 
+  @Get('obtener-estadisticas-por-finca/:idFinca')
+  obtenerEstadisticasPorFinca(@Param('idFinca') idFinca:string){
+    return this.ganadoService.obtenerEstadisticasPorFinca(idFinca)
+  }
+
   @Post('crear-ganado')
   crearGanado(@Body() ganado: CrearGanadoDto) {
     return this.ganadoService.crearGanado(ganado);

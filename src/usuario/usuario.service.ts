@@ -18,6 +18,7 @@ import { Usuario } from './schemas/usuario.schema';
 import { CrearUsuarioDto } from './dto/crearUsuario.dto';
 import { ROL } from './constantes';
 import { NuevoEmpleadoDto } from './dto/nuevoEmpleado.dto';
+import { ActualizarUsuarioDto } from './dto/actualizarUsuario.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -84,9 +85,6 @@ export class UsuarioService {
 
     return contrasena;
   }
-
-
-  
 
   async obtenerUsuarioPorId(id: string){
     return await this.usuarioModel.find({_id: id});
@@ -208,4 +206,9 @@ export class UsuarioService {
     throw new UnauthorizedException('El usuario autenticado no es un administrador de la finca para admitir esta solicitud');
   }
   
+  async actualizarUsuario(usuarioDto: ActualizarUsuarioDto, usuarioId:string){
+    const usuarioActualizado = await this.usuarioModel.findByIdAndUpdate(usuarioId, usuarioDto);
+    if(!usuarioActualizado) throw new BadRequestException('El usuario no existe!');
+    return await this.usuarioModel.findById(usuarioId);
+  }
 }

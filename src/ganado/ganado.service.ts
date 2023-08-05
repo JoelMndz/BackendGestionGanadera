@@ -6,9 +6,11 @@ import { Ganado } from './schema/ganado.schema';
 import { Model } from 'mongoose';
 import { AgregarPesoDto } from './dto/agregarPeso.dto';
 import { ActualizarGanadoDto } from './dto/actualizarGanado.dto';
-import { ESTADO_GANADO } from './constantes';
+import { ESTADO_GANADO, SEXO } from './constantes';
 import { ProduccionLeche } from './schema/produccion.leche.schema';
 import { Finca } from 'src/finca/schemas/finca.schema';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { CrearAlertaEvento } from 'src/alerta/events/crearAlerta.events';
 
 @Injectable()
 export class GanadoService {
@@ -16,18 +18,21 @@ export class GanadoService {
     private almacenamientoService: CloudinaryStrategy,
     @InjectModel(Ganado.name)
     private ganadoModel: Model<Ganado>,
+    private eventEmitter: EventEmitter2
   ) { }
 
   async obtenerGanadoPorFinca(idFinca: string) {
-    return await this.ganadoModel.find({ _finca: idFinca, estado:{
-      $ne: ESTADO_GANADO.ELIMINADO
-    }})
+    return await this.ganadoModel.find({
+      $and:[
+        {_finca: idFinca},
+        {estado:{$ne: ESTADO_GANADO.ELIMINADO}},
+        {estado:{$ne: ESTADO_GANADO.VENDIDO}},
+      ]})
       .populate('_padre')
       .populate('_madre')
   }
 
   async crearGanado(ganado: CrearGanadoDto) {
-
     let fotoURL = null
     if (ganado.imagenBase64) fotoURL = await this.almacenamientoService.subirImagenEnBase64(ganado.imagenBase64);
     const pesos = ganado.peso ? [{
@@ -52,6 +57,11 @@ export class GanadoService {
       lote: ganado.lote,
       _finca: ganado._finca,
     });
+
+    this.eventEmitter.emit('alertar', new CrearAlertaEvento(
+      'Nuevo Animal',
+      `Se ha creado un nuevo animal: ${ganado.nombre} - ${ganado.numero}`,
+      ganado._finca))
 
     return await this.ganadoModel.findById(nuevoGanado._id)
       .populate('_padre')
@@ -80,15 +90,40 @@ export class GanadoService {
       ...ganadoDto,
       fotoURL: fotoURL ?? existeGanado.fotoURL,
     })
-    return await this.ganadoModel.findById(ganadoDto._id)
-      .populate('_padre')
-      .populate('_madre')
+    const ganadoActualizado = await this.ganadoModel.findById(ganadoDto._id)
+    .populate('_padre')
+    .populate('_madre')
+    
+    this.eventEmitter.emit('alertar', new CrearAlertaEvento(
+      'Animal Modificado',
+      `Se ha modificado un animal: ${ganadoActualizado.nombre} - ${ganadoActualizado.numero}`,
+      ganadoActualizado._finca))
+
+    return ganadoActualizado
   }
 
   async eliminarGanado(idGanado: string){    
     const ganadoEliminado = await this.ganadoModel.findByIdAndUpdate(idGanado,{estado: ESTADO_GANADO.ELIMINADO})    
     if(!ganadoEliminado) throw new BadRequestException('El animal no existe!')
+    this.eventEmitter.emit('alertar', new CrearAlertaEvento(
+      'Animal Elimado',
+      `Se ha eliminado un animal: ${ganadoEliminado.nombre} - ${ganadoEliminado.numero}`,
+      ganadoEliminado._finca))
     return ganadoEliminado;
+  }
+
+  async obtenerEstadisticasPorFinca(idFinca: string){
+    const data = await this.ganadoModel.find({
+      $and:[
+        {_finca: idFinca},
+        {estado:{$ne: ESTADO_GANADO.ELIMINADO}},
+      ]});
+    const resultado = {
+      machos: data.filter(x => x.sexo === SEXO.MACHO && x.estado !== ESTADO_GANADO.VENDIDO).length,
+      hembras: data.filter(x => x.sexo === SEXO.HEMBRA && x.estado !== ESTADO_GANADO.VENDIDO).length,
+      vendidos: data.filter(x => x.estado === ESTADO_GANADO.VENDIDO).length
+    }
+    return resultado;
   }
 }
 

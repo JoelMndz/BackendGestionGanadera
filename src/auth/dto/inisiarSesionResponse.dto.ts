@@ -11,6 +11,8 @@ export class UsuarioResponse{
   email: string;
   @ApiProperty()
   direccion: string;
+  @ApiProperty()
+  telefono: string;
 }
 
 export class IniciarSesionResponse{
