@@ -90,25 +90,25 @@ export class GanadoService {
       ...ganadoDto,
       fotoURL: fotoURL ?? existeGanado.fotoURL,
     })
-    const ganadoActualizado = await this.ganadoModel.findById(ganadoDto._id)
+    const ganadoActualizado:any = await this.ganadoModel.findById(ganadoDto._id)
     .populate('_padre')
     .populate('_madre')
     
     this.eventEmitter.emit('alertar', new CrearAlertaEvento(
       'Animal Modificado',
       `Se ha modificado un animal: ${ganadoActualizado.nombre} - ${ganadoActualizado.numero}`,
-      ganadoActualizado._finca))
+      ganadoActualizado._finca._id))
 
     return ganadoActualizado
   }
 
   async eliminarGanado(idGanado: string){    
-    const ganadoEliminado = await this.ganadoModel.findByIdAndUpdate(idGanado,{estado: ESTADO_GANADO.ELIMINADO})    
+    const ganadoEliminado:any = await this.ganadoModel.findByIdAndUpdate(idGanado,{estado: ESTADO_GANADO.ELIMINADO})    
     if(!ganadoEliminado) throw new BadRequestException('El animal no existe!')
     this.eventEmitter.emit('alertar', new CrearAlertaEvento(
       'Animal Elimado',
       `Se ha eliminado un animal: ${ganadoEliminado.nombre} - ${ganadoEliminado.numero}`,
-      ganadoEliminado._finca))
+      ganadoEliminado._finca._id))
     return ganadoEliminado;
   }
 
