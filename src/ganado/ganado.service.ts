@@ -125,6 +125,10 @@ export class GanadoService {
     }
     return resultado;
   }
+
+  async agregarParto(){
+    //Etapa: ternero o ternera
+  }
 }
 
 

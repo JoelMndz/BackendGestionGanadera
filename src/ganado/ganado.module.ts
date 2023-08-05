@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Ganado, GanadoSchema } from './schema/ganado.schema';
 import { AuthModule } from 'src/auth/auth.module';
 import { Finca, FincaSchema } from 'src/finca/schemas/finca.schema';
+import { Parto, PartoSchema } from './schema/parto.schema';
 
 @Module({
   imports:[
@@ -14,6 +15,7 @@ import { Finca, FincaSchema } from 'src/finca/schemas/finca.schema';
     MongooseModule.forFeature([
       {name: Ganado.name, schema: GanadoSchema},
       {name: Finca.name, schema: FincaSchema},
+      {name: Parto.name, schema: PartoSchema}
     ])
   ],
   controllers: [GanadoController],

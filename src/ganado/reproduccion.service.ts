@@ -27,12 +27,12 @@ export class InseminacionService {
   async nuevaInseminacion(body: CrearInseminacionDto){
     const {  _vaca:vaca_id, _toro:animal, fecha, tipo, numeroPajilla, nota } = body;
     const fechaMinimaEdad = new Date();
-    fechaMinimaEdad.setFullYear(fechaMinimaEdad.getFullYear() - 2);
+    //fechaMinimaEdad.setFullYear(fechaMinimaEdad.getFullYear() - 2);
 
     const existeVaca = await this.ganadoModelo
       .findOne({
         _id: vaca_id,
-        fechaNacimiento: {$lt: fechaMinimaEdad},
+        //fechaNacimiento: {$lt: fechaMinimaEdad},
         sexo: 'hembra'
       })
       .populate('_finca');
