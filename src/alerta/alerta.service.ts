@@ -18,7 +18,6 @@ export class AlertaService {
 
   @OnEvent('alertar')
   async crearAlerta(alertaDto: CrearAlertaEvento){
-    console.log('Creando ganado...');
     return await this.alertaModel.create(alertaDto)
   }
 
