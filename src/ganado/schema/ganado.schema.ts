@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ESTADO_GANADO, SEXO } from "../constantes";
 import mongoose from "mongoose";
+import { Finca } from "src/finca/schemas/finca.schema";
 
 @Schema()
 export class Ganado{
@@ -81,9 +82,9 @@ export class Ganado{
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Ganado'
+    ref: 'Finca'
   })
-  _finca: string
+  _finca: Finca
 }
 
 export const GanadoSchema = SchemaFactory.createForClass(Ganado);

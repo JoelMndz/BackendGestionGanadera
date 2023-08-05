@@ -17,3 +17,10 @@ export enum HORARIO_ORDENO {
   TARDE='tarde',
   NOCHE='noche'
 }
+
+export enum TIPO_INSEMINCACION {
+  MONTA='monta',
+  INSEMINACION_ARTIFICIAL='ins_artificial',
+  TRANSFERENCIA='transferencia',
+  OTROS='otros',
+}
