@@ -7,6 +7,7 @@ import { AgregarPesoDto } from './dto/agregarPeso.dto';
 import { ActualizarGanadoDto } from './dto/actualizarGanado.dto';
 import { ProduccionLecheDto } from './dto/nuevaProduccionLeche.dto';
 import { GuardPayload } from 'src/finca/constantes';
+import { CrearPartoDto } from './dto/crearParto.dto';
 
 @ApiTags('ganado')
 @ApiBearerAuth()
@@ -27,9 +28,19 @@ export class GanadoController {
     return this.ganadoService.obtenerEstadisticasPorFinca(idFinca)
   }
 
+  @Get('obtener-partos-por-vaca/:idGanado')
+  obtenerPartosPorVaca(@Param('idGanado') idGanado:string){
+    return this.ganadoService.obtenerPartosPorVaca(idGanado)
+  }
+
   @Post('crear-ganado')
   crearGanado(@Body() ganado: CrearGanadoDto) {
     return this.ganadoService.crearGanado(ganado);
+  }
+
+  @Post('crear-parto')
+  crearParto(@Body() ganado: CrearPartoDto) {
+    return this.ganadoService.crearParto(ganado);
   }
   
   @Put('agregar-peso')

@@ -8,11 +8,7 @@ export class CrearPartoDto{
   @ApiProperty()
   @IsDateString()
   fecha: Date
-
-  @ApiProperty({enum: SEXO})
-  @IsEnum(SEXO)
-  sexo: string
-
+  
   @ApiProperty()
   @IsBoolean()
   aborto: Boolean;

@@ -7,9 +7,6 @@ export class Parto{
   @Prop({required: true})
   fecha: Date;
   
-  @Prop({required: true})
-  sexo: SEXO;
-
   @Prop({default: false})
   aborto: Boolean;
   

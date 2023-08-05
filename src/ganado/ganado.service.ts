@@ -11,6 +11,8 @@ import { ProduccionLeche } from './schema/produccion.leche.schema';
 import { Finca } from 'src/finca/schemas/finca.schema';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CrearAlertaEvento } from 'src/alerta/events/crearAlerta.events';
+import { CrearPartoDto } from './dto/crearParto.dto';
+import { Parto } from './schema/parto.schema';
 
 @Injectable()
 export class GanadoService {
@@ -18,6 +20,8 @@ export class GanadoService {
     private almacenamientoService: CloudinaryStrategy,
     @InjectModel(Ganado.name)
     private ganadoModel: Model<Ganado>,
+    @InjectModel(Parto.name)
+    private partoModel: Model<Parto>,
     private eventEmitter: EventEmitter2
   ) { }
 
@@ -126,8 +130,22 @@ export class GanadoService {
     return resultado;
   }
 
-  async agregarParto(){
-    //Etapa: ternero o ternera
+  async crearParto(partoDto:CrearPartoDto){
+    const existeVaca = await this.ganadoModel.findById(partoDto._vaca);
+    const existeHijo = await this.ganadoModel.findById(partoDto._hijo);
+
+    if(!existeVaca) throw new BadRequestException('La vaca no existe!');
+    if(existeVaca.sexo === SEXO.MACHO) throw new BadRequestException('Un toro no puede parir xD !');
+    if(!partoDto.aborto && !existeHijo) throw new BadRequestException('No existe el hijo!');
+    const nuevoParto = await this.partoModel.create({
+      ...partoDto,
+      _hijo: partoDto.aborto ? null : partoDto._hijo
+    });
+    return await this.partoModel.findById(nuevoParto._id).populate('_hijo');
+  }
+
+  async obtenerPartosPorVaca(idVaca: string){
+    return await this.partoModel.find({_vaca: idVaca}).populate('_hijo');
   }
 }
 
