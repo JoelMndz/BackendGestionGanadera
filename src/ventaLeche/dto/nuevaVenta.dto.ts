@@ -1,6 +1,28 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
+export class LitrosDto{
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  venta: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  proyecto: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  terneras: number
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  otros: number
+}
+
 export class NuevaVentaDto{
   @ApiProperty()
   @IsString()
@@ -12,23 +34,16 @@ export class NuevaVentaDto{
   @IsString()  
   fecha: String;
   
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  cantidadLitros: Number;
-  
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  numeroPotrero: Number;
+  @ApiProperty({type: LitrosDto})
+  litros: LitrosDto;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  consumoTerneros: Number;
+  vacasSacadas: Number;
   
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  consumoCasa: Number;
+  @IsString()
+  novedades: String;
 }

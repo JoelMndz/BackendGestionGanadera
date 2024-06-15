@@ -41,4 +41,10 @@ export class VentaLecheService{
     });
   }
 
+  async obtenerVentasPorFinca(fincaId: string){
+    return await this.ventaLecheModel.find({
+      _finca: fincaId,
+    });
+  }
+
 }

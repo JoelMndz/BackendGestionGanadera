@@ -10,18 +10,20 @@ export class VentaLeche{
   @Prop({required: true})
   fecha: string;
   
-  @Prop({required: true})
-  cantidadLitros: number;
+  @Prop({type:Object,required: true})
+  litros: {
+    venta: number,
+    proyecto: number,
+    terneras: number,
+    otros: number
+  };
   
   @Prop({required: true})
-  numeroPotrero: number;
-  
+  vacarSacadas: number
+
   @Prop({required: true})
-  consumoTerneros: number;
-  
-  @Prop({required: true})
-  consumoCasa: number;
-  
+  novedades: string
+
   @Prop({
     required:true,
     type: mongoose.Schema.Types.ObjectId, ref: 'Finca'

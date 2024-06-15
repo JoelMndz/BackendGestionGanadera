@@ -1,4 +1,4 @@
-import { Controller, Req, UseGuards, Body, Param, Post } from '@nestjs/common'
+import { Controller, Req, UseGuards, Body, Param, Post, Get } from '@nestjs/common'
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/auth/auth.guard";
 import { GuardPayload } from 'src/finca/constantes';
@@ -20,6 +20,13 @@ export class VentaLecheController {
     @Req() req:Response & GuardPayload 
   ){
     return this.ventaLecheService.nuevaVentaLeche(fincaId, newVenta, req.usuario._id);
+  }
+
+  @ApiResponse({ description: 'Devuelve la lista de ventas por finca'})
+  @UseGuards(AuthGuard)
+  @Get('/:fincaId')
+  obtenerVentasPorFinca(@Param('fincaId') fincaId:string){
+    return this.ventaLecheService.obtenerVentasPorFinca(fincaId);
   }
 
 }
