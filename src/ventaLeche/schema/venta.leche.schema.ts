@@ -19,7 +19,7 @@ export class VentaLeche{
   };
   
   @Prop({required: true})
-  vacarSacadas: number
+  vacasSacadas: number
 
   @Prop({required: true})
   novedades: string
