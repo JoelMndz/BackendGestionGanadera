@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { NuevaVentaDto } from './dto/nuevaVenta.dto';
 import { VentaLeche } from "./schema/venta.leche.schema";
 import { Finca } from 'src/finca/schemas/finca.schema';
+import * as moment from "moment";
 
 
 @Injectable()
@@ -21,10 +22,18 @@ export class VentaLecheService{
     });
   }
 
-  async obtenerVentasPorFinca(fincaId: string){
-    return await this.ventaLecheModel.find({
+  async obtenerVentasPorFinca(fincaId: string, inicio:string, fin:string){
+    let ventas = await this.ventaLecheModel.find({
       _finca: fincaId,
     });
+    console.log(ventas);
+    
+    console.log(inicio,fin);
+    
+    console.log(moment());
+    
+    ventas = ventas.filter(x => moment(x.fecha).isBetween(moment(inicio),moment(fin),undefined,'[]'))
+    return ventas;
   }
 
 }

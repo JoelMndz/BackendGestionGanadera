@@ -1,5 +1,5 @@
-import { Controller, Req, UseGuards, Body, Param, Post, Get } from '@nestjs/common'
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Controller, Req, UseGuards, Body, Param, Post, Get, Query } from '@nestjs/common'
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/auth/auth.guard";
 import { GuardPayload } from 'src/finca/constantes';
 import { VentaLecheService } from './venta.leche.service';
@@ -24,9 +24,11 @@ export class VentaLecheController {
 
   @ApiResponse({ description: 'Devuelve la lista de ventas por finca'})
   @UseGuards(AuthGuard)
+  @ApiQuery({name: 'fechaInicio', required: true, type: String})
+  @ApiQuery({name: 'fechaFin', required: true, type: String})
   @Get('/:fincaId')
-  obtenerVentasPorFinca(@Param('fincaId') fincaId:string){
-    return this.ventaLecheService.obtenerVentasPorFinca(fincaId);
+  obtenerVentasPorFinca(@Param('fincaId') fincaId:string, @Query('fechaInicio') inicio: string,  @Query('fechaFin') fin: string){
+    return this.ventaLecheService.obtenerVentasPorFinca(fincaId,inicio,fin);
   }
 
 }
