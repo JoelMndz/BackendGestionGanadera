@@ -26,11 +26,6 @@ export class VentaLecheService{
     let ventas = await this.ventaLecheModel.find({
       _finca: fincaId,
     });
-    console.log(ventas);
-    
-    console.log(inicio,fin);
-    
-    console.log(moment());
     
     ventas = ventas.filter(x => moment(x.fecha).isBetween(moment(inicio),moment(fin),undefined,'[]'))
     return ventas;
