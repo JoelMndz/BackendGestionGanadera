@@ -7,11 +7,13 @@ import { ApiBearerAuth, ApiConflictResponse, ApiOkResponse, ApiResponse, ApiTags
 import { IniciarSesionResponse } from './dto/inisiarSesionResponse.dto';
 import {Request} from "express";
 import { GuardPayload } from 'src/finca/constantes';
+import { RestablecerPasswordDto } from 'src/usuario/dto/restablecerPassword.dto';
+import { UsuarioService } from 'src/usuario/usuario.service';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController { 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private usuarioService: UsuarioService) {}
 
   @ApiOkResponse({ description: 'Inicio de sesión exitoso', type: IniciarSesionResponse, status:200})
   @ApiConflictResponse({ description: 'Usuario o contraseña incorrecta, no autorizado para ingresar', status:401 })
@@ -32,5 +34,10 @@ export class AuthController {
   @Get('perfil')
   getProfile(@Req() req: Request & GuardPayload) {
     return req.usuario;
+  }
+
+  @Post('restablecer-password')
+  restablecerPassword(@Body() dto: RestablecerPasswordDto) {
+    return this.usuarioService.restablecerPassword(dto);
   }
 }

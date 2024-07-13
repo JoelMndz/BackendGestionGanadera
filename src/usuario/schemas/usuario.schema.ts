@@ -20,6 +20,9 @@ export class Usuario {
   @Prop()
   telefono: string;
 
+  @Prop()
+  codigoRecuperacion: string;
+
 }
 
 export const UsuarioSchema = SchemaFactory.createForClass(Usuario)

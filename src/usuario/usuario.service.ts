@@ -19,6 +19,7 @@ import { CrearUsuarioDto } from './dto/crearUsuario.dto';
 import { ROL } from './constantes';
 import { NuevoEmpleadoDto } from './dto/nuevoEmpleado.dto';
 import { ActualizarUsuarioDto } from './dto/actualizarUsuario.dto';
+import { RestablecerPasswordDto } from './dto/restablecerPassword.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -63,7 +64,6 @@ export class UsuarioService {
         subject: asunto,
         html: cuerpo,
       });
-      console.log(`Correo enviado a ${correoDestino.substring(0, 6)}... `);
       
     } catch (error) {
       console.log(`Error al enviar el correo a ${correoDestino.substring(0, 6)}...`);
@@ -210,5 +210,20 @@ export class UsuarioService {
     const usuarioActualizado = await this.usuarioModel.findByIdAndUpdate(usuarioId, usuarioDto);
     if(!usuarioActualizado) throw new BadRequestException('El usuario no existe!');
     return await this.usuarioModel.findById(usuarioId);
+  }
+
+  async restablecerPassword(dto:RestablecerPasswordDto){
+    const usuarioActual = await this.usuarioModel.findOne({email: dto.email.toLocaleLowerCase()});
+    if(!usuarioActual) throw new BadRequestException("Datos incorrectos!")
+    const password = this.generarContrasenaAleatoria();
+    usuarioActual.password = await hash(password, 10)
+    const usuarioActualizado = await this.usuarioModel.findByIdAndUpdate(usuarioActual._id, usuarioActual)
+    await this.enviarEmail(usuarioActual.email, `Contraseña restablecida`, `
+      <p>Estimado/a ${usuarioActual.nombres}, se ha restablecido su contraseña</p>
+      <h4>Contraseña: ${password}</h4>
+      <br/>
+      <p>Saludos!</p>
+    `)
+    return usuarioActualizado;
   }
 }
