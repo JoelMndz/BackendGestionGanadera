@@ -108,6 +108,7 @@ export class UsuarioService {
       .populate('colaboradores._usuario');
 
     const data = resp[0].colaboradores.map((colaborador:any) => ({
+      _id: colaborador._usuario._id,
       nombres: colaborador._usuario.nombres,
       apellidos: colaborador._usuario.apellidos,
       email: colaborador._usuario.email,
