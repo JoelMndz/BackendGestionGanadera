@@ -12,6 +12,7 @@ import { AlertaModule } from 'src/alerta/alerta.module';
     AlertaModule,
     MongooseModule.forFeature([{name: Finca.name, schema: FincaSchema}])],
   controllers: [FincaController],
-  providers: [FincaService]
+  providers: [FincaService],
+  exports: [FincaService],
 })
 export class FincaModule {}

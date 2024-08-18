@@ -6,7 +6,7 @@ import {
   ApiTags, 
   ApiUnauthorizedResponse 
 } from '@nestjs/swagger';
-import { Controller, Body, Req, Post, Get, UseGuards, Param, Patch } from '@nestjs/common';
+import { Controller, Body, Req, Post, Get, UseGuards, Param, Patch, Delete } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { NuevoEmpleadoDto } from './dto/nuevoEmpleado.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -45,6 +45,14 @@ export class UsuarioController {
     @Body() empleado: NuevoEmpleadoDto
   ) {
     return this.usuarioService.nuevoEmpleado(id, empleado, req.usuario);
+  };
+
+  @Delete(':idFinca/:idEmpleado')
+  eliminarEmpleado(
+    @Param('idFinca') idFinca:string, 
+    @Param('idEmpleado') idEmpleado:string,
+  ) {
+    return this.usuarioService.eliminarEmpleado(idFinca, idEmpleado);
   };
 
   @Patch('actualizar-usuario')

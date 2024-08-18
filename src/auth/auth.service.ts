@@ -1,6 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
+import { FincaService } from 'src/finca/finca.service';
 import { CrearUsuarioDto } from 'src/usuario/dto/crearUsuario.dto';
 import { UsuarioService } from 'src/usuario/usuario.service';
 
@@ -9,6 +10,7 @@ export class AuthService {
   constructor(
     private usuarioService: UsuarioService,
     private jwtService: JwtService,
+    private fincaService: FincaService,
   ) {}
 
   async iniciarSesion(email: string, password: string) {
@@ -16,6 +18,12 @@ export class AuthService {
 
     if (!usuario || !(await compare(password, usuario.password))) {
       throw new UnauthorizedException();
+    }
+
+    const fincas = await this.fincaService.obtenerFincasPorUsuario(usuario._id.toString())
+    
+    if(fincas.length == 0){
+      throw new BadRequestException("No tiene fincas asociadas")
     }
     const token = await this.jwtService.signAsync({ _id: usuario._id });
     return { usuario, token };

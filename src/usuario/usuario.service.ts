@@ -226,4 +226,34 @@ export class UsuarioService {
     `)
     return usuarioActualizado;
   }
+
+  async eliminarEmpleado(idFinca: string, idTrabajador: string){
+    try {
+      const finca = await this.fincaModel.findById(idFinca);
+      if (!finca) {
+        throw new BadRequestException('La finca no existe');
+      }
+
+      const existeTrabajador = finca.colaboradores.some(
+        (colaborador) => colaborador._usuario.toString() === idTrabajador
+      );
+
+      if (!existeTrabajador) {
+        throw new BadRequestException('El trabajador no existe');
+      }
+
+      const trabajador = await this.usuarioModel.findById(idTrabajador);
+      if (!trabajador) {
+        throw new BadRequestException('El trabajador no existe');
+      }
+
+      finca.colaboradores = finca.colaboradores.filter(x => x._usuario.toString() !== idTrabajador);
+
+      await finca.save();
+      return finca
+    } catch (error) {
+      console.error('Error al agregar el trabajador a la finca:', error);
+      throw error;
+    }
+  }
 }

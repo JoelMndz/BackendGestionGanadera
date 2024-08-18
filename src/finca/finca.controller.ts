@@ -1,10 +1,11 @@
-import { Controller, Get, UseGuards, Req, Body, Post } from '@nestjs/common';
+import { Controller, Get, UseGuards, Req, Body, Post, Patch, Delete, Param } from '@nestjs/common';
 import { FincaService } from './finca.service';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import {Request} from "express";
 import { GuardPayload } from './constantes';
 import { CrearFincaDto } from './dto/crearFinca.dto';
+import { ActualizarFincaDto } from './dto/actualizarFinca.dto';
 
 @ApiBearerAuth()
 @ApiTags('finca')
@@ -20,10 +21,22 @@ export class FincaController {
     return this.fincaService.obtenerFincasPorUsuario(req.usuario._id);
   }
 
-  @ApiResponse({ description: 'Devulelve la finca ingresada'})
+  @ApiResponse({ description: 'Devuelve la finca ingresada'})
   @UseGuards(AuthGuard)
   @Post('crear-finca')
   crearFinca(@Req() req:Request & GuardPayload, @Body() finca:CrearFincaDto){
     return this.fincaService.crearFinca(req.usuario._id, finca);
+  }
+
+  @ApiResponse({ description: 'Devuelve la finca actualizada'})
+  @UseGuards(AuthGuard)
+  @Patch('actualizar-finca')
+  actualizarFinca(@Body() finca:ActualizarFincaDto){
+    return this.fincaService.actualizarFinca(finca);
+  }
+
+  @Delete('/:id')
+  eliminarFinca(@Param('id') id:string){
+    return this.fincaService.eliminarFinca(id)
   }
 }

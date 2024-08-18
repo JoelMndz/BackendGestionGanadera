@@ -7,6 +7,7 @@ import { Usuario } from '../usuario/schemas/usuario.schema';
 import { ROL } from 'src/usuario/constantes';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CrearAlertaEvento } from 'src/alerta/events/crearAlerta.events';
+import { ActualizarFincaDto } from './dto/actualizarFinca.dto';
 
 
 @Injectable()
@@ -18,10 +19,15 @@ export class FincaService {
 
   async obtenerFincasPorUsuario(usuarioId: string) {
     return await this.fincaModel.find({ 
-        $or: [
-          { _propietario: usuarioId }, 
-          { "colaboradores._usuario": { $in: usuarioId } }
-        ]
+      $and: [
+        { eliminado: { $ne: true } },
+        { 
+          $or: [
+            { _propietario: usuarioId }, 
+            { "colaboradores._usuario": { $in: usuarioId } }
+          ]
+        }
+      ]
       })
       .populate('colaboradores')
   }
@@ -42,6 +48,39 @@ export class FincaService {
     return nuevaFinca
   }
 
+  async actualizarFinca(finca:ActualizarFincaDto){
+    const existeFinca = await this.fincaModel.findById(finca._id)
+    if (!existeFinca) throw new BadRequestException('La finca no existe!')
+
+    if(finca.area < finca.areaGanadera)
+      new BadRequestException('El area ganadera no puede ser mayor que el area')
+    
+    const fincActualizada =  await this.fincaModel.findByIdAndUpdate(finca._id,{
+      ...finca
+    })
+
+    this.eventEmitter.emit('alertar', new CrearAlertaEvento(
+      'Finca actualizada',
+      `Se ha actualizado una finca: ${fincActualizada.nombre}`,
+      fincActualizada._id.toString()))
+    return await this.fincaModel.findById(finca._id);
+  }
+
+  async eliminarFinca(idFinca: string){
+    const existeFinca = await this.fincaModel.findById(idFinca)
+    if (!existeFinca) throw new BadRequestException('La finca no existe!')
+
+    const fincActualizada =  await this.fincaModel.findByIdAndUpdate(idFinca,{
+      eliminado: true
+    })
+
+    this.eventEmitter.emit('alertar', new CrearAlertaEvento(
+      'Finca eliminada',
+      `Se ha eliminado una finca: ${fincActualizada.nombre}`,
+      fincActualizada._id.toString()))
+    return fincActualizada
+  }
+
   async agregarTrabajador(idFinca: string, idTrabajador: string) {
     try {
       const finca = await this.fincaModel.findById(idFinca);
@@ -50,7 +89,7 @@ export class FincaService {
       }
 
       const trabajadorYaAgregado = finca.colaboradores.some(
-        (colaborador) => colaborador.toString() === idTrabajador
+        (colaborador) => colaborador._usuario.toString() === idTrabajador
       );
 
       if (trabajadorYaAgregado) {

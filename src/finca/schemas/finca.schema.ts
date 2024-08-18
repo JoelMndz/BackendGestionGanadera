@@ -41,6 +41,9 @@ export class Finca{
     type: mongoose.Schema.Types.ObjectId, ref: 'Usuario'
   })
   _propietario: Usuario;
+
+  @Prop()
+  eliminado: boolean
   
   @Prop({
     default: [],
